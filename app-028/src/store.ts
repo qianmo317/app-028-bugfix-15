@@ -41,12 +41,20 @@ export const DEFAULT_SETTINGS: Settings = {
 
 export const customPapers = ref<Paper[]>(loadJSON<Paper[]>(KEY.customPapers, []))
 export const customSizes = ref<PhotoSize[]>(loadJSON<PhotoSize[]>(KEY.customSizes, []))
-export const settings = ref<Settings>(loadJSON(KEY.settings, DEFAULT_SETTINGS))
+/** 旧版本存档可能缺项（比如新增的 exportDpi），缺的字段按出厂值补齐 */
+function loadSettings(): Settings {
+  const saved = loadJSON<Partial<Settings> | null>(KEY.settings, null)
+  if (!saved || typeof saved !== 'object' || Array.isArray(saved)) return { ...DEFAULT_SETTINGS }
+  return { ...DEFAULT_SETTINGS, ...saved }
+}
+
+export const settings = ref<Settings>(loadSettings())
 export const tasks = ref<Task[]>(loadJSON<Task[]>(KEY.tasks, []))
 export const leftovers = ref<Leftover[]>(loadJSON<Leftover[]>(KEY.leftovers, []))
 
 watch(customPapers, (v) => saveJSON(KEY.customPapers, v), { deep: true })
 watch(customSizes, (v) => saveJSON(KEY.customSizes, v), { deep: true })
+watch(settings, (v) => saveJSON(KEY.settings, v), { deep: true })
 watch(tasks, (v) => saveJSON(KEY.tasks, v), { deep: true })
 watch(leftovers, (v) => saveJSON(KEY.leftovers, v), { deep: true })
 
@@ -124,10 +132,10 @@ export function createTask(partial: Partial<Task> = {}): Task {
     paperId: partial.paperId ?? 'p5x7',
     customPaper: partial.customPaper,
     items: partial.items ?? [],
-    gapMm: 0,
-    kerfMm: 0.5,
-    safeEdgeMm: 3,
-    allowRotate: true,
+    gapMm: partial.gapMm ?? settings.value.gapMm,
+    kerfMm: partial.kerfMm ?? settings.value.kerfMm,
+    safeEdgeMm: partial.safeEdgeMm ?? settings.value.safeEdgeMm,
+    allowRotate: partial.allowRotate ?? settings.value.allowRotate,
     headerText: partial.headerText ?? '',
     footerText: partial.footerText ?? '',
     createdAt: Date.now(),

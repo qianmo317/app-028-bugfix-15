@@ -10,6 +10,7 @@ import {
   makePhotoResolver,
   makeThumbResolver,
   photoVersion,
+  settings,
   sheetsOf,
 } from '../store'
 import { computeCost } from '../logic/cost'
@@ -29,7 +30,7 @@ const paper = computed(() => (task.value ? resolvePaper(task.value, allPapers.va
 const sheets = computed(() => (task.value ? sheetsOf(task.value) : []))
 const valid = computed(() => !task.value?.manual || task.value.manual.valid)
 const cost = computed(() => (task.value?.result ? computeCost(paper.value, task.value.result) : undefined))
-const dpi = ref(300)
+const dpi = ref(settings.value.exportDpi)
 const busy = ref(false)
 const message = ref('')
 

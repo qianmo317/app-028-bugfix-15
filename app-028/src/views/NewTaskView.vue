@@ -201,6 +201,10 @@ function submit() {
     paperId: draft.paperId,
     customPaper: draft.paperId === 'custom' ? { ...draft.customPaper } : undefined,
     items: draft.items.map((i) => ({ ...i })),
+    gapMm: draft.gapMm,
+    kerfMm: draft.kerfMm,
+    safeEdgeMm: draft.safeEdgeMm,
+    allowRotate: draft.allowRotate,
     headerText: draft.headerText,
     footerText: draft.footerText,
   })
