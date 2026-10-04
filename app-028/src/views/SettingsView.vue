@@ -65,6 +65,17 @@ function reset() {
             <input v-model="settings.allowRotate" type="checkbox" />
             默认允许整体旋转 90°
           </label>
+          <label class="field">
+            默认位图导出分辨率 exportDpi：{{ settings.exportDpi }} dpi
+            <input
+              v-model.number="settings.exportDpi"
+              type="range"
+              min="150"
+              max="600"
+              step="150"
+            />
+          </label>
+          <div class="note">导出页的位图 DPI 选择器默认取这里的数值，仍可在导出时临时调整</div>
         </div>
       </div>
 
